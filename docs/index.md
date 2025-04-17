@@ -3,23 +3,14 @@
 page_title: "CipherTrust Provider"
 subcategory: ""
 description: |-
-  The CipherTrust provider can be used configure a CipherTrust instance or cluster and subsequently manage cloud resources.
+  The CipherTrust provider can be used to configure a CipherTrust instance or cluster and subsequently manage resources.
 ---
 
 # CipherTrust Provider
 
-Use the navigation pane to the left to read about the available Resources and Data Sources.
+Use the navigation to the left to read about the available resources.
 
-[Sample scripts](https://github.com/ThalesGroup/terraform-provider-ciphertrust/tree/main/sample-scripts) allow you to easily create CipherTrust Manager resources for your cloud and includes some practical examples of using the CipherTrust provider with other cloud providers.
-
-Refer to the [change log](https://github.com/ThalesGroup/terraform-provider-ciphertrust/blob/main/changelog.md) for changes in this version.
-
-## Supported Clouds
-
-## Public Clouds
-- AWS
-- Azure
-- Google Cloud
+[Sample scripts](https://github.com/ThalesGroup/terraform-provider-ciphertrust/tree/main/sample-scripts) allow you to easily create CipherTrust Manager resources for your cloud and includes some practical examples of using the CipherTrust provider.
 
 ## Thales Devices
 The following devices can be used to create keys for the above public clouds.
@@ -46,12 +37,12 @@ The following table illustrates which parameters can be provided as environment 
 | auth_domain          | CM_AUTH_DOMAIN       | auth_domain | No        | Empty string (root domain) |
 | remaining parameters | no                   | yes         | No        | N/A                        |
 
-The order of precedence when determining the value of a provider parameter: 
+The order of precedence when determining the value of a provider parameter:
 1. Provider Block
 2. Environment Variable
 3. Configuration File
 
-## Provider Block 
+## Provider Block
 
 ### For CipherTrust Manager
 
@@ -64,14 +55,14 @@ provider "ciphertrust" {
 }
 
 ```
-To authenticate to and log in to a domain other than root: 
+To authenticate to and log in to a domain other than root:
 
 ```terraform
 provider "ciphertrust" {
   address      = "cm-address"
   username     = "cm-username"
   password     = "cm-password"
-  auth_domain  = "users-auth-domain" 
+  auth_domain  = "users-auth-domain"
 }
 ```
 
@@ -143,29 +134,8 @@ provider "ciphertrust" {}
 
 - `address` (String) HTTPS URL of the CipherTrust instance. An address need not be provided when creating a cluster of CipherTrust instances. address can be set in the provider block, via the CM_ADDRESS environment variable or in ~/.ciphertrust/config
 - `auth_domain` (String) CipherTrust authentication domain of the user. This is the domain where the user was created. auth_domain can be set in the provider block, via the CM_AUTH_DOMAIN environment variable or in ~/.ciphertrust/config. Default is the empty string (root domain).
-- `aws_operation_timeout` (Number) Some AWS key operations, for example, replication, can take some time to complete. This specifies how long to wait for an operation to complete in seconds. aws_operation_timeout can be set in the provider block or in ~/.ciphertrust/config. Default is 480.
-- `azure_operation_timeout` (Number) Azure key operations can take time to complete. This specifies how long to wait for an operation to complete in seconds. azure_operation_timeout can be set in the provider block or in ~/.ciphertrust/config. Default is 240.
-- `cloud_key_manager` (Block List, Max: 1) Cloud Key Manager Settings (see [below for nested schema](#nestedblock--cloud_key_manager))
 - `domain` (String) CipherTrust domain to log in to. domain can be set in the provider block, via the CM_DOMAIN environment variable or in ~/.ciphertrust/config. Default is the empty string (root domain).
-- `gcp_operation_timeout` (Number) Some Google Cloud operations, for example, schedule destroy, are not synchronous. This specifies how long to wait for an operation to complete in seconds. gcp_operation_timeout can be set in the provider block or in ~/.ciphertrust/config. Default is 120.
-- `hsm_operation_timeout` (Number) HSM connection operations are not synchronous. This specifies how long to wait for an operation to complete in seconds. hsm_operation_timeout can be set in the provider block or in ~/.ciphertrust/config. Default is 120.
 - `log_file` (String) Log file name. log_file can be set in the provider block or in ~/.ciphertrust/config. Default is ctp.log.
 - `log_level` (String) Logging level. log_level can be set in the provider block or in ~/.ciphertrust/config. Default is info. Options: debug, info, warning or error.
 - `no_ssl_verify` (Boolean) Set to false to verify the server's certificate chain and host name. no_ssl_verify can be set in the provider block or in ~/.ciphertrust/config. Default is true.
 - `rest_api_timeout` (Number) CipherTrust rest api timeout in seconds. rest_api_timeout can be set in the provider block or in ~/.ciphertrust/config. Default is 60.
-
-<a id="nestedblock--cloud_key_manager"></a>
-### Nested Schema for `cloud_key_manager`
-
-Optional:
-
-- `azure` (Block List, Max: 1) Azure Key Settings (see [below for nested schema](#nestedblock--cloud_key_manager--azure))
-
-<a id="nestedblock--cloud_key_manager--azure"></a>
-### Nested Schema for `cloud_key_manager.azure`
-
-Optional:
-
-- `purge_keys_on_delete` (Boolean) Should ciphertrust_azure_key resources be purged when destroyed? Defaults to true. If not true, the key will only be soft-deleted.
-- `recover_soft_deleted_keys` (Boolean) Should ciphertrust_azure_key resources recover Soft-Deleted keys if an attempt is made to create a key of the same name? Defaults to true. If true, the key will be recovered and a new key will be created.
-- `retain_key_backups_after_purge` (Boolean) Should CipherTrust Manager retain key backups when the key is purged? Defaults to true. If true, a purged key will be retained by CipherTrust Manager and it can be restored from a key backup using the CipherTrust Cloud Key Manager User Interface or CipherTrust Cloud Key Manager API. It will not be possible to create a key of the same name in CipherTrust Manager until it is restored. If false, it will not be possible to restore the key from a backup but it will be possible to create a new key with the same name.
